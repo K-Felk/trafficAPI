@@ -1,0 +1,24 @@
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase "/trafficapi/"
+
+
+RewriteRule ^entries/{0,1}$ controllers/entry.php 
+
+RewriteRule ^entries/bydate?.+$ controllers/entry.php [L,QSA]
+
+RewriteRule ^entries/(\d+)/{0,1}$ controllers/entry.php?entryID=$1 
+
+RewriteRule ^entries/(\d+)/traffic/{0,1}$ controllers/traffic.php?entryID=$1 
+
+RewriteRule ^spaces/(\d+)/traffic/bydate?.+$ controllers/traffic.php?spaceID=$1 [L,QSA]
+
+RewriteRule ^spaces/(\d+)/traffic/{0,1}$ controllers/traffic.php?spaceID=$1 
+
+RewriteRule ^entries/(\d+)/spaces/(\d+)/traffic/{0,1}$ controllers/traffic.php?spaceID=$2&entryID=$1 
+
+
+</IfModule>
