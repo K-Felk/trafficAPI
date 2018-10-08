@@ -4,7 +4,10 @@ require "../models/feedback.php";
 
 require "../models/database.php";
 
-$headers = apache_request_headers();
+if (empty($_SERVER['HTTPS'])) {
+    header("HTTP/1.0 500 Internal Server Error");
+    die(); 
+}
 
 $database = new Database();
 
