@@ -20,5 +20,13 @@ RewriteRule ^spaces/(\d+)/traffic/{0,1}$ controllers/traffic.php?spaceID=$1
 
 RewriteRule ^entries/(\d+)/spaces/(\d+)/traffic/{0,1}$ controllers/traffic.php?spaceID=$2&entryID=$1 
 
+RewriteRule ^traffic/{0,1}$ controllers/trafficLabels.php
+
+RewriteRule ^spaces/{0,1}$ controllers/spaces.php
+
+RewriteRule ^feedback/{0,1}$ controllers/feedback.php [L,QSA]
+
+RewriteRule ^feedback/bydate?.+$ controllers/feedback.php [L,QSA]
+
 
 </IfModule>
