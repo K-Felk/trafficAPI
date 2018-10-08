@@ -82,7 +82,7 @@ class Entry {
     }
 
     //unset any data
-    public function unSet() {
+    public function unSetData() {
         unset($this->time);
         unset($this->use);
         unset($this->entryID);

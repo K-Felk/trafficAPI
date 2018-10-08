@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
 
         $entries = $entry->getAll();
         if (!$entries) {
-            if ($entry->erMsg == "No entries found.") {
+            if ($entry->errMsg == "No entries found.") {
                 header("HTTP/1.0 404 File Not Found");
             } else {
                 $handle = fopen("../error.log", "a");
