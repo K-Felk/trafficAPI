@@ -9,7 +9,7 @@ require "../models/user.php";
 require "error.php";
 
 
-
+$authorizedUsers = array("display");
 
 $database = new Database();
 
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         die();
     }
 
-    if (!isset($_GET["feedBackLevel"])) {
+    if (!isset($_POST["feedBackLevel"])) {
         header("HTTP/1.0 400 Bad Request");
         die();
 
@@ -97,14 +97,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     $feedBackValues = array("1","2","3","4","5");
 
-    if (!in_array($_GET["feedBackLevel"], $feedBackValues)) {
+    if (!in_array($_POST["feedBackLevel"], $feedBackValues)) {
         header("HTTP/1.0 400 Bad Request");
         die();
     }
 
     //if we make it to this point, insert the feedback
 
-    if ($feedback->insertFeedBack($_GET["feedBackLevel"])) {
+    if ($feedback->insertFeedBack($_POST["feedBackLevel"])) {
         header("HTTP/1.0 200 OK");
     } else {
         writeError("Cannot authenticate user for post: " . $user->errMsg);

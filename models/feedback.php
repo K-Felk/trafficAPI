@@ -49,7 +49,7 @@ class feedBack {
         if ($stmt->execute()) {
             return true;
         } else {
-            $error = $this->conn->errorInfo();
+            $error = $stmt->errorInfo();
             $this->errMsg = $error[2];
             return false;
         }
@@ -101,7 +101,7 @@ class feedBack {
 
         } else {
             
-            $error = $this->conn->errorInfo();
+            $error = $stmt->errorInfo();
             $this->errMsg = $error[2];
             return FALSE;
         }
