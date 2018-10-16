@@ -2,13 +2,15 @@
 
 class trafficLabels {
 
-    public $trafficLabels;
+    public $trafficLabels = NULL;
     public $errMsg;
+    private $tableName = "noise_labels";
+    private $conn;
 
     // constructor with $db as database connection
     public function __construct($db){
         $this->conn = $db;
-        $query = "select * from traffic_labels";
+        $query = "select * from $this->tableName";
 
         $stmt = $this->conn->prepare($query);
 
@@ -17,8 +19,10 @@ class trafficLabels {
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($results) > 0) {
                 $this->trafficLabels = $results;
+                
             } else {
                 $errMsg = "No Labels Found.";
+                
             }
             
 
@@ -28,11 +32,14 @@ class trafficLabels {
             $error = $stmt->errorInfo();
             $this->errMsg = $error[2];
             
+            
         }
 
         
 
     }
+    
+    
 
 }
 

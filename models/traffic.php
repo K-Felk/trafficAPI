@@ -222,6 +222,80 @@ class Traffic {
 
     }
 
+    //funtion to input traffic data
+
+    public function saveTraffic($initials, $spacedata){
+
+        
+
+        $query = "insert into entries (initials) values (:initials)";
+
+        $stmt = $this->conn->prepare($query);
+
+        if (!$stmt->bindParam(':initials', $initials, PDO::PARAM_STR, 3)) {
+            $error = $this->conn->errorInfo();
+            $this->errMsg = $error[2];
+            return FALSE;
+        }
+
+        if (!$this->conn->beginTransaction()) {
+            $error = $this->conn->errorInfo();
+            $this->errMsg = $error[2];
+            return FALSE;
+        }
+
+        if (!$stmt->execute()) {
+            $error = $this->conn->errorInfo();
+            $this->errMsg = $error[2];
+            return FALSE;
+        }
+
+        $entryID = $this->conn->lastInsertId();
+
+        foreach ($spaceData as $data) {
+
+            $query = "insert into $this->table_name (level, entryID, space, comments) values (:level, $entryID, :space, :comments)";
+            $stmt = $this->conn->prepare($query);
+
+            if (!$stmt->bindParam(':level', $data["level"], PDO::PARAM_INT)) {
+                $error = $this->conn->errorInfo();
+                $this->errMsg = $error[2];
+                return FALSE;
+            }
+            if (!$stmt->bindParam(':space', $data["space"], PDO::PARAM_INT)) {
+                $error = $this->conn->errorInfo();
+                $this->errMsg = $error[2];
+                return FALSE;
+            }
+
+            if (!$stmt->bindParam(':comments', $data["comments"], PDO::PARAM_STR, strlen($data["comments"]))) {
+                    $error = $this->conn->errorInfo();
+                    $this->errMsg = $error[2];
+                    return FALSE;
+            }
+            
+
+            if (!$stmt->execute()) {
+                $dbh->rollBack();
+                $error = $this->conn->errorInfo();
+                $this->errMsg = $error[2];
+                return FALSE;
+            }
+
+        }
+
+        if (!$this->conn->commit()) {
+            $dbh->rollBack();
+            $error = $this->conn->errorInfo();
+            $this->errMsg = $error[2];
+            return FALSE;
+        } else {
+            return true;
+        }
+
+    
+    }
+
 
 
 }

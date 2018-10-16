@@ -42,6 +42,21 @@ class feedBack {
 
     }
 
+    public function insertFeedBack($level) {
+        $int = (int)$level;
+        $query = "insert into $this->table_name (emotion_id) values($int)";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            $error = $this->conn->errorInfo();
+            $this->errMsg = $error[2];
+            return false;
+        }
+
+
+    }
+
     public function getByDate($startDate, $endDate) {
         //if the start date is left blank, figure out the earliest time entry logged and start from that
         if ($startDate == "") {

@@ -2,7 +2,7 @@
 
 class Spaces {
 
-    public $spaces;
+    public $spaces = NULL;
     public $errMsg;
 
     // constructor with $db as database connection
