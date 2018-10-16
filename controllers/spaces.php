@@ -4,6 +4,8 @@ require "../models/spaces.php";
 
 require "../models/database.php";
 
+require "error.php";
+
 $headers = apache_request_headers();
 
 $database = new Database();
@@ -12,9 +14,8 @@ $conn = $database->getConnection();
 
 //make sure we can connect to the database
 if (!$conn) { 
-    $handle = fopen("../error.log", "a");
-    fwrite($handle, "Cannot Connect to database: " . $database->errMsg);
-    fclose($handle);
+    writeError("Cannot Connect to database: " . $database->errMsg);
+    
     header("HTTP/1.0 500 Internal Server Error");
     die();   
 }
@@ -31,9 +32,8 @@ if (isset($spaces->spaces)) {
     if ($spaces->errMsg == "No Labels Found.") {
         header("HTTP/1.0 404 Page Not Found");
     } else {
-        $handle = fopen("../error.log", "a");
-        fwrite($handle, "Cannot retrieve requested traffic data: " . $spaces->errMsg);
-        fclose($handle);
+        writeError("Cannot retrieve requested traffic data: " . $spaces->errMsg);
+        
         header("HTTP/1.0 500 Internal Server Error");
     }
 }

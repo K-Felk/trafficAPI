@@ -4,8 +4,10 @@ class user {
     public $userName;
     public $apiKey;
     public $ID;
-    private $tableName = "apiKey";
+    private $tableName = "apiKeys";
     public $errMsg;
+    private $conn;
+    public $diagnostic;
     
     
 
@@ -15,19 +17,30 @@ class user {
     }
 
     public function setUser($apiKey) {
-        $query = "select * from $this->tableName where apiKey like '$apiKey'";
+        $query = "select * from $this->tableName where apiKey = '$apiKey'";
 
         $stmt = $this->conn->prepare($query);
+
+        if (!$stmt) {
+            $error = $this->conn->errorInfo();
+            $this->errMsg = $error[2];
+            return false;
+        }
+
+
 
         if ($stmt->execute()) {
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($results) == 1) {
-                $this->userName = $results['userName'];
-                $this->apiKey = $results['apiKey'];
-                $this->ID = $results['ID'];
+                foreach ($results as $result) {
+                    $this->userName = $result['userName'];
+                    $this->apiKey = $result['apiKey'];
+                    $this->ID = $result['IDnumber'];
+                }
                 return true;
             } else {
-                $errMsg = "No user Found.";
+                $this->diagnostic = $query;
+                $this->errMsg = "No user Found.";
                 return false;
             }
             
@@ -35,7 +48,7 @@ class user {
 
 
         } else {
-            $error = $stmt->errorInfo();
+            $error = $this->conn->errorInfo();
             $this->errMsg = $error[2];
             return false;
             

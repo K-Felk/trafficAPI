@@ -6,13 +6,10 @@ require "../models/database.php";
 
 require "../models/user.php";
 
-if (empty($_SERVER['HTTPS'])) {
-    header("HTTP/1.0 500 Internal Server Error");
-    die(); 
-}
+require "error.php";
 
-//list of users authorized to insert feedback data
-$authorizedUsers = array("display");
+
+
 
 $database = new Database();
 
@@ -20,9 +17,7 @@ $conn = $database->getConnection();
 
 //make sure we can connect to the database
 if (!$conn) { 
-    $handle = fopen("../error.log", "a");
-    fwrite($handle, "Cannot Connect to database: " . $database->errMsg);
-    fclose($handle);
+    writeError("Cannot Connect to database: " . $database->errMsg);
     header("HTTP/1.0 500 Internal Server Error");
     die();   
 }
@@ -61,9 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
         if ($feedback->errMsg = "No entries found.") {
             header("HTTP/1.0 404 Page Not Found");
         } else {
-            $handle = fopen("../error.log", "a");
-            fwrite($handle, "Cannot retrieve requested traffic data: " . $spaces->errMsg);
-            fclose($handle);
+            writeError("Cannot retrieve requested traffic data: " . $spaces->errMsg);
+            
             header("HTTP/1.0 500 Internal Server Error");
         }
     }
@@ -80,9 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 header("HTTP/1.0 403 Authentication Failed");
                 die();
             } else {
-            $handle = fopen("../error.log", "a");
-            fwrite($handle, "Cannot retrieve user data: " . $user->errMsg);
-            fclose($handle);
+            writeError("Cannot retrieve user data: " . $user->errMsg);
+            
             header("HTTP/1.0 500 Internal Server Error");
             }
         }
@@ -114,9 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     if ($feedback->insertFeedBack($_GET["feedBackLevel"])) {
         header("HTTP/1.0 200 OK");
     } else {
-        $handle = fopen("../error.log", "a");
-        fwrite($handle, "Cannot authenticate user for post: " . $user->errMsg);
-        fclose($handle);
+        writeError("Cannot authenticate user for post: " . $user->errMsg);
+        
         header("HTTP/1.0 500 Internal Server Error");
         die();
     }
