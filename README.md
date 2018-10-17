@@ -57,7 +57,7 @@ Traffic data for a specific space by date.  see entries for how the date searchi
 
 ### Post URLs
 
-the database supports only two post operations.  Both require API keys and as with any other transaction, use of SSL.  The api key must be passed in a basic authentication username/password header (leave the username blank).  Each post transation requires the API key.
+the API supports only two post operations.  Both require API keys and as with any other transaction, use of SSL.  The API key must be passed in a basic authentication username/password header (leave the username blank).  Each post transation requires the API key.
 
 #### Posting feedback
 
