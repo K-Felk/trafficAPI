@@ -13,7 +13,7 @@ $headers = apache_request_headers();
 
 $database = new Database();
 
-$conn = $database->getConnection();
+$conn = $database->getViewConnection();
 
 
 //authorized users, in case it's a post request
