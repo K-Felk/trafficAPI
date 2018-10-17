@@ -1,5 +1,9 @@
 <?php
 
+if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') {
+    die();
+}
+
 require "../models/trafficLabels.php";
 
 require "../models/database.php";
