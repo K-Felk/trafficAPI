@@ -5,7 +5,7 @@ The api allows both get and post operations. Post operations require an API key 
 
 ## Getting data out of the database
 
-Data can be requested by issuing standard http get reqests to the /trafficapi/ directory.  Requests are captured by an .htaccess file using mod_rewrite to direct the request to the correct script for handling.  All responses are in JSON and data is typically sorted by date, with the most recent date first-this makes it easy to do things like get the most recent traffic data.
+Data can be requested by issuing get reqests to the /trafficapi/ directory.  Requests are captured by an .htaccess file using mod_rewrite to direct the request to the correct script for handling.  All responses are in JSON and data is typically sorted by date, with the most recent date first-this makes it easy to do things like get the most recent traffic data.
 
 All requests must use ssl.  This is because I don't want API keys for post operations transmitted in the open.  A rquest over http will not get any response from the API.
 
