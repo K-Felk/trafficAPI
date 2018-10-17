@@ -53,10 +53,23 @@ Returns all traffic data for the space corresponding to space_id, ordered chrono
 
 /trafficapi/spaces/space_id/traffic/bydate?start=start_date&end=end_date
 
-Straffic data for a specific space by date.  see entries for how the date searching works.
+Traffic data for a specific space by date.  see entries for how the date searching works.
 
+### Post URLs
 
+the database supports only two post operations.  Both require API keys and as with any other transaction, use of SSL.  The api key must be passed in a basic authentication username/password header (leave the username blank).  Each post transation requires the API key.
 
+#### Posting feedback
+
+Just set a post parameter named "feedBackLevel" to a legal value (1-5) and issue it to /trafficapi/feedback.  
+
+#### Posting Traffic Data
+
+Traffic data must be passed to the /trafficapi/traffic endpoint.  The data must be passed in JSON as the payload of the POST request.  Following is a model of what the JSON needs to look like.  Note that the first entity has to be the initials.  An improperly formed JSON block will trigger a 400 "bed request" status.
+
+~~~~ 
+{"initials":"kaf","0":{"space":"1","level":"0"},"1":{"space":"2","level":"1","comments":"this is a comment"},"2":{"space":"3","level":"2"},"3":{"space":"4","level":"3"},"4":{"space":"5","level":"4","comments":"this was strange"},"5":{"space":"6","level":"4"},"6":{"space":"7","level":"3"},"7":{"space":"8","level":"3"},"8":{"space":"9","level":"3","comments":""},"9":{"space":"10","level":"3"},"10":{"space":"11","level":"3"},"11":{"space":"12","level":"3"},"12":{"space":"13","level":"3"},"13":{"space":"14","level":"3"},"14":{"space":"15","level":"3"},"15":{"space":"16","level":"3"}}
+~~~~
 
 
 
