@@ -65,7 +65,7 @@ Just set a post parameter named "feedBackLevel" to a legal value (1-5) and issue
 
 #### Posting Traffic Data
 
-Traffic data must be passed to the /trafficapi/traffic endpoint.  The data must be passed in JSON as the payload of the POST request.  Following is a model of what the JSON needs to look like.  Note that the first entity has to be the initials.  An improperly formed JSON block will trigger a 400 "bed request" status.
+Traffic data must be passed to the /trafficapi/traffic endpoint.  The data must be passed in JSON as the payload of the POST request.  Following is a model of what the JSON needs to look like.  Note that the first entity has to be the initials.  An improperly formed JSON block will trigger a 400 "bad request" status.
 
 ~~~~ 
 {"initials":"kaf","0":{"space":"1","level":"0"},"1":{"space":"2","level":"1","comments":"this is a comment"},"2":{"space":"3","level":"2"},"3":{"space":"4","level":"3"},"4":{"space":"5","level":"4","comments":"this was strange"},"5":{"space":"6","level":"4"},"6":{"space":"7","level":"3"},"7":{"space":"8","level":"3"},"8":{"space":"9","level":"3","comments":""},"9":{"space":"10","level":"3"},"10":{"space":"11","level":"3"},"11":{"space":"12","level":"3"},"12":{"space":"13","level":"3"},"13":{"space":"14","level":"3"},"14":{"space":"15","level":"3"},"15":{"space":"16","level":"3"}}
