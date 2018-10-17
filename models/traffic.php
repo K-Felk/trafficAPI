@@ -158,7 +158,7 @@ class Traffic {
     }
 
     //unset any data
-    public function unSet() {
+    public function clear() {
         unset($this->level);
         unset($this->spaceID);
         unset($this->entryID);
