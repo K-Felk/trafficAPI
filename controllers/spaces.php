@@ -10,7 +10,7 @@ $headers = apache_request_headers();
 
 $database = new Database();
 
-$conn = $database->getConnection();
+$conn = $database->getViewConnection();
 
 //make sure we can connect to the database
 if (!$conn) { 
