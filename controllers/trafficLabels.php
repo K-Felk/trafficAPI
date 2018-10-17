@@ -19,7 +19,11 @@ $headers = apache_request_headers();
 
 $database = new Database();
 
-$conn = $database->getConnection();
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    $conn = $database->getEditConnection();
+} else {
+    $conn = $database->getViewConnection();
+}
 
 //make sure we can connect to the database
 if (!$conn) { 

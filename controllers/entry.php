@@ -7,8 +7,11 @@ require "../models/database.php";
 $headers = apache_request_headers();
 
 $database = new Database();
-
-$conn = $database->getConnection();
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    $conn = $database->getEditConnection();
+} else {
+    $conn = $database->getViewConnection();
+}
 
 if (!$conn) {
 
