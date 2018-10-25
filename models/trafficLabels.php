@@ -4,7 +4,7 @@ class trafficLabels {
 
     public $trafficLabels = NULL;
     public $errMsg;
-    private $tableName = "noise_labels";
+    private $tableName = "traffic_labels";
     private $conn;
 
     // constructor with $db as database connection
