@@ -20,8 +20,6 @@ RewriteRule ^spaces/(\d+)/traffic/{0,1}$ controllers/traffic.php?spaceID=$1
 
 RewriteRule ^entries/(\d+)/spaces/(\d+)/traffic/{0,1}$ controllers/traffic.php?spaceID=$2&entryID=$1 
 
-RewriteRule ^traffic/all/{0,1}$ controllers/traffic.php?all=true
-
 RewriteRule ^traffic/{0,1}$ controllers/trafficLabels.php
 
 RewriteRule ^spaces/{0,1}$ controllers/spaces.php
