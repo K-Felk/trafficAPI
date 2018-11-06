@@ -42,6 +42,8 @@ $traffic = new Traffic($conn);
 //trafficapi/spaces/spaceID/traffic
 //or a specific entry and space
 //trafficapi/entries/entryID/spaces/spaceID/traffic
+//or just get everything
+//trafficapi/traffic/all
 if ($_SERVER['REQUEST_METHOD'] === "GET") {
     if (isset($_GET["spaceID"]) && isset($_GET["entryID"])) {
 
@@ -100,6 +102,21 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
                 header("HTTP/1.0 500 Internal Server Error");
             }
         }
+    } elseif (isset($_GET["all"])) {
+        $results = $traffic->getAll();
+        if ($results) {
+            header('Content-Type: application/json');
+            echo json_encode($results);
+        } else {
+            if ($traffic->errMsg == "No entries found.") {
+                header("HTTP/1.0 404 Page Not Found");
+            } else {
+                errorWrite("Cannot retrieve requested traffic data: " . $traffic->errMsg);
+                header("HTTP/1.0 500 Internal Server Error");
+            }
+        }
+    
+    
     } else {
         header("HTTP/1.0 404 Page Not Found");
     }

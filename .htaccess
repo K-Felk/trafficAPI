@@ -22,6 +22,8 @@ RewriteRule ^entries/(\d+)/spaces/(\d+)/traffic/{0,1}$ controllers/traffic.php?s
 
 RewriteRule ^traffic/{0,1}$ controllers/trafficLabels.php
 
+RewriteRule ^traffic/all{0,1}$ controllers/traffic.php?all=true
+
 RewriteRule ^spaces/{0,1}$ controllers/spaces.php
 
 RewriteRule ^feedback/{0,1}$ controllers/feedback.php [L,QSA]
