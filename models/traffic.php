@@ -223,38 +223,7 @@ class Traffic {
 
     }
 
-    //just get everything in the traffic table
-
-    public function getAll() {
-               //create query
-               $query = "SELECT t.*, s.name as 'spaceName', l.name as 'trafficLabel' FROM traffic t, spaces s, traffic_labels l WHERE s.ID = t.space and l.ID = t.level";
-        
-               // prepare query statement
-               $stmt = $this->conn->prepare($query);
-       
-               // execute query
-               if ($stmt->execute()) {
-                   $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-       
-                   if (count($results) < 1) {
-                       
-                       $this->errMsg = "No entries found for that space ID.";
-                       return FALSE;
-       
-                   } else {
-                       
-                       return $results;
-                   }
-               } else {
-                   
-                   $error = $stmt->errorInfo();
-                   $this->errMsg = $error[2];
-                   return FALSE;
-               }
-       
-               
-       
-    }
+ 
 
     //funtion to input traffic data
 

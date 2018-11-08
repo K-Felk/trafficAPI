@@ -14,6 +14,8 @@ class Entry {
     public $entryID;
     public $initials;
     public $errMsg = NULL;
+    public $query;
+    
     
     
  
@@ -93,6 +95,117 @@ class Entry {
 
 
     }
+    //get entries by multiple ranges of include/exclude times and dates
+
+    public function getByDateAverages($includeDates, $excludeDates, $includeHours, $excludeHours) {
+
+        //at least one include date must be set.  All other values are optional, but at least an empty array must be passed
+        //  Dates must be in the format "YYYY-DD-MM"
+        //hours need to be an integer
+        $includeDateQuery = "";
+
+        $it = 0;
+        $includeDateQuery .= " (";
+        foreach ($includeDates as $range) {
+            if ($it >= 1)  {
+                $includeDateQuery .= " OR ";
+            }
+
+            $includeDateQuery .= "(date(e.time) BETWEEN '" . $range[0] . "' AND '" . $range[1] . "') ";
+            ++$it;
+        }
+        $includeDateQuery .= ") ";
+
+        $it = 0;
+
+        if (!empty($excludeDates)) {
+            $it = 0;
+            $includeDateQuery .= " AND (";
+            foreach ($excludeDates as $range) {
+                if ($it >= 1)  {
+                    $includeDateQuery .= " AND ";
+                }
+                $includeDateQuery .= "(date(e.time) NOT BETWEEN '" . $range[0] . "' AND '" . $range[1] . "') ";
+                ++$it;
+            }
+            $includeDateQuery .= ") ";
+        }
+        
+
+        if (!empty($includeHours)) {
+            $it = 0;
+            $includeDateQuery .= " AND (";
+            foreach ($includeHours as $range) {
+                if ($it >= 1)  {
+                    $includeDateQuery .= " OR ";
+                }
+                $includeDateQuery .= "(HOUR(e.time) BETWEEN " . $range[0] . " AND " . $range[1] . " )";
+                ++$it;
+            }
+            $includeDateQuery .= ") ";
+        }
+
+
+        if (!empty($excludeHours)) {
+            $it = 0;
+            $includeDateQuery .= " AND (";
+            foreach ($excludeHours as $range) {
+                if ($it >= 1)  {
+                    $includeDateQuery .= " AND ";
+                }
+                $includeDateQuery .= "(HOUR(e.time) NOT BETWEEN " . $range[0] . " AND " . $range[1] . ")";
+                ++$it;
+            }
+            $includeDateQuery .= ")";
+        }
+
+        $query = "SELECT
+        t.space,
+        AVG(t.level) as average,
+        s.name
+        FROM
+        entries e,
+        traffic t,
+        spaces s
+        WHERE
+        t.level != -1 AND
+        t.space = s.ID 
+        AND t.entryID = e.entryID AND" . $includeDateQuery . "
+        GROUP BY
+        t.space";
+
+        $stmt = $this->conn->prepare($query);
+        
+
+        if ($stmt->execute()) {
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($results) < 1) {
+                $this->errMsg = "No entries found ";
+                return false;
+            } else {
+            
+                return $results;
+            }
+
+        } else {
+            
+            $error = $stmt->errorInfo();
+            $this->errMsg = $error[2];
+            return FALSE;
+        }
+
+
+
+
+
+
+
+
+    }
+
+
+
     //get entries by a specific date range
     public function getByDate($startDate, $endDate) {
         //if the start date is left blank, figure out the earliest time entry logged and start from that
