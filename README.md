@@ -1,13 +1,13 @@
 # trafficapi
-A rest-like API for requesting traffic data from our librayr traffic database
+A rest-like API for requesting traffic data from our library traffic database.
 
-The api allows both get and post operations. Post operations require an API key and a password (these are set by our applications developer), but get operations require no authentication.
+The api allows both get and post operations. Post operations that change database data require an API key (these are set by our applications developer), but read-only operations require no authentication.
 
 ## Getting data out of the database
 
 Data can be requested by issuing get reqests to the /trafficapi/ directory.  Requests are captured by an .htaccess file using mod_rewrite to direct the request to the correct script for handling.  All responses are in JSON and data is typically sorted by date, with the most recent date first-this makes it easy to do things like get the most recent traffic data.
 
-All requests must use ssl.  This is because I don't want API keys for post operations transmitted in the open.  A rquest over http will not get any response from the API.
+All requests must use ssl.  This is because I don't want API keys for post operations transmitted in the open.  A request over http will not get any response from the API.
 
 ### get urls
 
@@ -57,7 +57,7 @@ Traffic data for a specific space by date.  see entries for how the date searchi
 
 ### Requesting modes and Averages 
 
-The API will calculate averages and counts of the number of times a traffic levels was entered for a specific area.  Requests for tht data should be directed to the following endpoint:
+The API will calculate averages and counts of the number of times a traffic level was entered for a specific area.  Requests for that data should be directed to the following endpoint:
 
 /trafficapi/calculate
 
@@ -65,25 +65,25 @@ Additional data will need to be entered as JSON in the body of a POST request to
 
 **include**
 
-An array of date ranges in the format "YYYY/MM/DD",  With the start date first and end date second.  These dates will be included in calculations.  You can specify multiple date ranges.
+An array of date ranges in the format "YYYY/MM/DD",  With the start date first and end date second.  These dates will be included in calculations.  You can specify multiple date ranges. Optional.
 
 **exclude**
-An array of date ranges in the format "YYYY/MM/DD",  With the start date first and end date second.  These dates will be excluded from calculations.  You can specify multiple date ranges.
+An array of date ranges in the format "YYYY/MM/DD",  With the start date first and end date second.  These dates will be excluded from calculations.  You can specify multiple date ranges. Optional.
 
 **mode**
-Can be set to "average" or "mode."  Will tell the endpoint which calculation to perform.  Note that "mode" calculations require a specific space.
+Can be set to "average" or "mode."  Will tell the endpoint which calculation to perform.  Note that "mode" calculations require a specific space. Required.
 
 **spaceID**
 
-Required for "mode" calculations.  Must be set to a spaceID from the spaces table.  See above for how to request these IDs from the API itself.
+Required for "mode" calculations.  Must be set to a spaceID from the spaces table.  See above for how to request these IDs from the API itself. Required for mode calculations.
 
 **hoursInclude**
 
-Can be set for multiple hour ranges.  Ranges supplied will be the only ones included in calculations.  Specify hours as a 24 hour clock (0-24).
+Can be set for multiple hour ranges.  Ranges supplied will be the only ones included in calculations.  Specify hours as a 24 hour clock (0-24). Optional.
 
 **HoursExclude**
 
-Can be set for multiple hour ranges.  Ranges supplied will be excluded from calculations.  Specify hours as a 24 hour clock (0-24).
+Can be set for multiple hour ranges.  Ranges supplied will be excluded from calculations.  Specify hours as a 24 hour clock (0-24). Optional.
 
 **sample request**
 

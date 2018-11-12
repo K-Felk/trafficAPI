@@ -1,8 +1,8 @@
 <?php
 
-//if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') {
-//    die();
-//}
+if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') {
+   die();
+}
 
 
 //checks all date range data, if it's valid, returns a reformatted array of values. 
