@@ -205,7 +205,7 @@ class Entry {
         } else {
                         
             $error = $stmt->errorInfo();
-            $this->errMsg = $query;
+            $this->errMsg = $error[2];
             return FALSE;
         }
             
