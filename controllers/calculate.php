@@ -1,8 +1,8 @@
 <?php
 
-if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') {
-    die();
-}
+//if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') {
+//    die();
+//}
 
 
 //checks all date range data, if it's valid, returns a reformatted array of values. 
@@ -26,7 +26,7 @@ function checkConvertDates($dates) {
             return false;
         }
 
-        if ($endTime <= $startTime) {
+        if ($endTime < $startTime) {
             return false;
 
         }
@@ -108,28 +108,53 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         die();
     }
 
-    //is there at least one "include" date range?
+    //there must be a "mode" entry to tell us wether we are looking for mode or average
 
-    if (!array_key_exists("include", $params)) {
+    if (!array_key_exists("mode", $params)) {
         header("HTTP/1.0 400 Bad Request");
         die();
 
     }
 
-    $include = $params["include"];
+    //it must contain either "mode" or "average"
 
-    $includeChecked = checkConvertDates($include);
-
-    if ($includeChecked === false) {
-        header("HTTP/1.0 408 Bad Request");
+    if ($params["mode"] != "mode" && $params["mode"] != "average") {
+        header("HTTP/1.0 400 Bad Request");
         die();
     }
+    //mode inquiries require a spaceID which must be between 1 and 12
 
+    if ($params["mode"] == "mode") {
+        if (!array_key_exists("spaceID", $params)) {
+            header("HTTP/1.0 400 Bad Request");
+            die();
+    
+        }
+
+        if ((int) $params["spaceID"] > 12 || (int) $params["spaceID"] < 1) {
+            header("HTTP/1.0 400 Bad Request");
+            die();
+        }
+
+
+    }
+
+    //is there an "include" date range?
+    if (array_key_exists("include", $params)) {
+        $include = $params["include"];
+        $includeChecked = checkConvertDates($include);
+        if ($includeChecked === false) {
+            header("HTTP/1.0 400 Bad Request");
+            die();
+         }
+    } else {
+        $includeChecked = array();
+    }
 
     
     //if there are exclude dates, validate them.  Otherwise, create an empty array.
     if (array_key_exists("exclude", $params)) {
-
+        $exclude = $params["exclude"];
         
          $excludeChecked = checkConvertDates($exclude);
 
@@ -175,19 +200,31 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     }
 
     //do we finally have all our parameters?
-
-    $averages = $entry->getByDateAverages($includeChecked, $excludeChecked, $hoursIncludeChecked, $hoursExcludeChecked);
-
-    if ($averages === false) {
-        writeError("Cannot calculate averages: " . $entry->errMsg);
-            
-        header("HTTP/1.0 500 Internal Server Error");
+    if ($params["mode"] == "average") {
+        $result = $entry->getByDateAverages($includeChecked, $excludeChecked, $hoursIncludeChecked, $hoursExcludeChecked);
     } else {
-        echo json_encode($averages);
+        $result = $entry->getMode($includeChecked, $excludeChecked, $hoursIncludeChecked, $hoursExcludeChecked, (int) $params["spaceID"]);
+    }
+    if ($result === false) {
+
+        if ($entry->errMsg == "No entries found") {
+            echo json_encode("No entries found");
+        } else {
+            writeError("Cannot calculate: " . $entry->errMsg);
+            
+            header("HTTP/1.0 500 Internal Server Error");
+        }
+    } else {
+        echo json_encode($result);
     }
 
     
     
+
+} else {
+    //this endpoint only accepts post requests
+    header("HTTP/1.0 400 Bad Request");
+    die();
 
 }
 

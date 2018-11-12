@@ -95,28 +95,25 @@ class Entry {
 
 
     }
-    //get entries by multiple ranges of include/exclude times and dates
-
-    public function getByDateAverages($includeDates, $excludeDates, $includeHours, $excludeHours) {
-
-        //at least one include date must be set.  All other values are optional, but at least an empty array must be passed
-        //  Dates must be in the format "YYYY-DD-MM"
-        //hours need to be an integer
+    //function to generate the insane search query strings I need to restrict things by date
+    private function generateQuery($includeDates, $excludeDates, $includeHours, $excludeHours) {
         $includeDateQuery = "";
 
-        $it = 0;
-        $includeDateQuery .= " (";
-        foreach ($includeDates as $range) {
-            if ($it >= 1)  {
-                $includeDateQuery .= " OR ";
+        if (!empty($excludeDates)) {
+            $includeDateQuery .= " AND (";
+            $it = 0;
+            foreach ($includeDates as $range) {
+                if ($it >= 1)  {
+                    $includeDateQuery .= " OR ";
+                }
+
+                $includeDateQuery .= "(date(e.time) BETWEEN '" . $range[0] . "' AND '" . $range[1] . "') ";
+                ++$it;
             }
-
-            $includeDateQuery .= "(date(e.time) BETWEEN '" . $range[0] . "' AND '" . $range[1] . "') ";
-            ++$it;
+            $includeDateQuery .= ") ";
         }
-        $includeDateQuery .= ") ";
 
-        $it = 0;
+        
 
         if (!empty($excludeDates)) {
             $it = 0;
@@ -158,6 +155,71 @@ class Entry {
             }
             $includeDateQuery .= ")";
         }
+        return $includeDateQuery;
+
+    }
+
+    //get the rtaffic mode for a specific space
+
+    public function getMode($includeDates, $excludeDates, $includeHours, $excludeHours, $spaceID) {
+        //at least one include date must be set.  All other values are optional, but at least an empty array must be passed
+        //  Dates must be in the format "YYYY-DD-MM"
+        //hours need to be an integer
+        $includeDateQuery = $this->generateQuery($includeDates, $excludeDates, $includeHours, $excludeHours);
+
+        $query = "SELECT
+	                s.id as spaceID,
+	                COUNT(t.space) as Number,
+	                tl.name as level,
+                    tl.id as levelID,
+	                s.name as spaceName
+                    FROM
+	                traffic_labels tl
+                    JOIN
+	                spaces s
+                    ON s.id = " . $spaceID . 
+                    " LEFT JOIN
+	                traffic t
+  	                ON
+  		            tl.id = t.level
+                    AND 
+    	            s.id = t.space
+                    LEFT JOIN
+	                entries e
+  	                ON
+  		            e.entryID = t.entryId
+                    WHERE 1=1 " . $includeDateQuery . " GROUP BY tl.id";
+
+        $stmt = $this->conn->prepare($query);
+
+        if ($stmt->execute()) {
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (count($results) < 1) {
+                $this->errMsg = "No entries found";
+                return false;
+            } else {       
+                return $results;
+            }
+            
+        } else {
+                        
+            $error = $stmt->errorInfo();
+            $this->errMsg = $query;
+            return FALSE;
+        }
+            
+
+    }
+    //get entries by multiple ranges of include/exclude times and dates
+
+    public function getByDateAverages($includeDates, $excludeDates, $includeHours, $excludeHours) {
+
+        //at least one include date must be set.  All other values are optional, but at least an empty array must be passed
+        //  Dates must be in the format "YYYY-DD-MM"
+        //hours need to be an integer
+        
+        $includeDateQuery = $this->generateQuery($includeDates, $excludeDates, $includeHours, $excludeHours);
 
         $query = "SELECT
         t.space,
@@ -170,7 +232,7 @@ class Entry {
         WHERE
         t.level != -1 AND
         t.space = s.ID 
-        AND t.entryID = e.entryID AND" . $includeDateQuery . "
+        AND t.entryID = e.entryID " . $includeDateQuery . "
         GROUP BY
         t.space";
 
@@ -181,7 +243,7 @@ class Entry {
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if (count($results) < 1) {
-                $this->errMsg = "No entries found ";
+                $this->errMsg = "No entries found";
                 return false;
             } else {
             

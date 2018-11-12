@@ -55,9 +55,53 @@ Returns all traffic data for the space corresponding to space_id, ordered chrono
 
 Traffic data for a specific space by date.  see entries for how the date searching works.
 
+### Requesting modes and Averages 
+
+The API will calculate averages and counts of the number of times a traffic levels was entered for a specific area.  Requests for tht data should be directed to the following endpoint:
+
+/trafficapi/calculate
+
+Additional data will need to be entered as JSON in the body of a POST request to that endpoint:
+
+**include**
+
+An array of date ranges in the format "YYYY/MM/DD",  With the start date first and end date second.  These dates will be included in calculations.  You can specify multiple date ranges.
+
+**exclude**
+An array of date ranges in the format "YYYY/MM/DD",  With the start date first and end date second.  These dates will be excluded from calculations.  You can specify multiple date ranges.
+
+**mode**
+Can be set to "average" or "mode."  Will tell the endpoint which calculation to perform.  Note that "mode" calculations require a specific space.
+
+**spaceID**
+
+Required for "mode" calculations.  Must be set to a spaceID from the spaces table.  See above for how to request these IDs from the API itself.
+
+**hoursInclude**
+
+Can be set for multiple hour ranges.  Ranges supplied will be the only ones included in calculations.  Specify hours as a 24 hour clock (0-24).
+
+**HoursExclude**
+
+Can be set for multiple hour ranges.  Ranges supplied will be excluded from calculations.  Specify hours as a 24 hour clock (0-24).
+
+**sample request**
+
+A sample json-encoded calculation request body for the mode calculation of a space.
+
+~~~~ 
+{"mode":"mode","spaceID":"8","include":[["10\/1\/2018","10\/31\/2018"]],"exclude":[["10\/3\/2018","10\/10\/2018"]],"hoursExclude":[["11","16"]],"hoursInclude":[["8","20"]]}
+~~~~ 
+
+A sample json-encoded calculation request body for the average calculation of a space.
+~~~~ 
+{"mode":"average","include":[["10\/1\/2018","10\/31\/2018"]],"exclude":[["10\/3\/2018","10\/10\/2018"]],"hoursExclude":[["11","16"]],"hoursInclude":[["8","20"]]}
+~~~~ 
+
+
 ### Post URLs
 
-the API supports only two post operations.  Both require API keys and as with any other transaction, use of SSL.  The API key must be passed in a basic authentication username/password header (leave the username blank).  Each post transation requires the API key.
+the API supports only two post operations that actually change the database.  Both require API keys and as with any other transaction, use of SSL.  The API key must be passed in a basic authentication username/password header (leave the username blank).  Each post transation requires the API key.
 
 #### Posting feedback
 

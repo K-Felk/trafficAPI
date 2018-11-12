@@ -28,7 +28,7 @@ RewriteRule ^feedback/{0,1}$ controllers/feedback.php [L,QSA]
 
 RewriteRule ^feedback/bydate?.+$ controllers/feedback.php [L,QSA]
 
-RewriteRule ^average/{0,1}$ controllers/calculate.php
+RewriteRule ^calculate/{0,1}$ controllers/calculate.php
 
 
 </IfModule>
