@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         header("HTTP/1.0 400 Bad Request");
         die();
     }
-    //mode inquiries require a spaceID which must be between 1 and 12
+    //mode inquiries require a spaceID which must be between 1 and 16
 
     if ($params["mode"] == "mode") {
         if (!array_key_exists("spaceID", $params)) {
@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     
         }
 
-        if ((int) $params["spaceID"] > 12 || (int) $params["spaceID"] < 1) {
+        if ((int) $params["spaceID"] > 16 || (int) $params["spaceID"] < 1) {
             header("HTTP/1.0 400 Bad Request");
             die();
         }
@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         if ($includeChecked === false) {
             header("HTTP/1.0 400 Bad Request");
             die();
-         }
+        }
     } else {
         $includeChecked = array();
     }

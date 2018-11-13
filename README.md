@@ -65,10 +65,10 @@ Additional data will need to be entered as JSON in the body of a POST request to
 
 **include**
 
-An array of date ranges in the format "YYYY/MM/DD",  With the start date first and end date second.  These dates will be included in calculations.  You can specify multiple date ranges. Optional.
+An array of date ranges in the format "MM/DD/YYYY",  With the start date first and end date second.  These dates will be included in calculations.  You can specify multiple date ranges. Optional.
 
 **exclude**
-An array of date ranges in the format "YYYY/MM/DD",  With the start date first and end date second.  These dates will be excluded from calculations.  You can specify multiple date ranges. Optional.
+An array of date ranges in the format "MM/DD/YYYY",  With the start date first and end date second.  These dates will be excluded from calculations.  You can specify multiple date ranges. Optional.
 
 **mode**
 Can be set to "average" or "mode."  Will tell the endpoint which calculation to perform.  Note that "mode" calculations require a specific space. Required.
