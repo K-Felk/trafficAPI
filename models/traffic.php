@@ -108,8 +108,8 @@ class Traffic {
 
     public function getAllbySpace($spaceID) {
         //create query
-        $query = "SELECT t.*, s.name as 'spaceName', l.name as 'trafficLabel' FROM traffic t, spaces s, traffic_labels l WHERE t.space =" .
-        $spaceID . " and s.ID = t.space and l.ID = t.level order by time desc";
+        $query = "SELECT t.*, s.name as 'spaceName', l.name as 'trafficLabel' FROM entries e, traffic t, spaces s, traffic_labels l WHERE t.space =" .
+        $spaceID . " and s.ID = t.space and l.ID = t.level and t.entryID = e.entryID order by e.time desc";
  
         // prepare query statement
         $stmt = $this->conn->prepare($query);
