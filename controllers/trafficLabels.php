@@ -1,8 +1,8 @@
 <?php
 
-if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') {
-    die();
-}
+//if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') {
+ //   die();
+//}
 
 require "../models/trafficLabels.php";
 
@@ -17,7 +17,7 @@ require "../models/traffic.php";
 require "error.php";
 
 //list of users authorized to insert feedback data
-$authorizedUsers = array("display");
+$authorizedUsers = array("input", "input_form");
 
 $headers = apache_request_headers();
 
@@ -62,26 +62,18 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
 //an optional "comments" parameter
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
+    
     if (isset($_SERVER['PHP_AUTH_PW'])) {
-        if ($_SERVER['PHP_AUTH_PW'] == "") {
-            writeError("Blank Password Supplied");
-            header("HTTP/1.0 403 Authentication Failed");
-            die();
-        }
-
         $user = new User($conn);
 
         if (!$user->setUser($_SERVER['PHP_AUTH_PW'])) {
-            writeError($user->diagnostic);
             if ($user->errMsg == "No user Found.") {
-                
                 header("HTTP/1.0 403 Authentication Failed");
                 die();
             } else {
-                writeError("Cannot retrieve user data: " . $user->errMsg);
+            writeError("Cannot retrieve user data: " . $user->errMsg);
             
-                header("HTTP/1.0 500 Internal Server Error");
-                die();
+            header("HTTP/1.0 500 Internal Server Error");
             }
         }
     } else {
@@ -91,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     if (!in_array($user->userName, $authorizedUsers)) {
         header("HTTP/1.0 401 Unauthorized");
-        die();
+       die();
     }
 
     $contents = file_get_contents('php://input');

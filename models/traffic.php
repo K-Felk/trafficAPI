@@ -237,9 +237,9 @@ class Traffic {
         }
 
 
-        $query = "insert into entries (initials) values (:initials)";
+        $query = "insert into entries (initials, time) values (:initials, CURRENT_TIMESTAMP)";
 
-        $stmt = $this->conn->prepare('insert into entries (initials) values (:initials)');
+        $stmt = $this->conn->prepare($query);
 
         if (!$stmt->bindParam(':initials', $initials, PDO::PARAM_STR, 3)) {
             

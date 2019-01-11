@@ -21,7 +21,7 @@ $conn = $database->getViewConnection();
 
 
 //authorized users, in case it's a post request
-$authorized = array("display");
+$authorized = array("display","input");
 
 
 
@@ -107,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
     }
 
 }
+
 
 
 
