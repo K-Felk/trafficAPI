@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     
     if (isset($_SERVER['PHP_AUTH_PW'])) {
         
-        $user = new User($conn);
+        $user = new user($conn);
 
         if (!isset($user)) {
             writeError("Cannot create user object");
