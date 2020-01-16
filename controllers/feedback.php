@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    $logfile = fopen("feedbackpost.log", "a") or die("Unable to open logfile!");
+    $logfile = fopen("../feedbackpost.log", "a") or die("Unable to open logfile!");
     fwrite($logfile, "password sent: " . $_SERVER['PHP_AUTH_PW'] . "\n");
     fwrite($logfile, "return value from setuser: " . $user->setUser($_SERVER['PHP_AUTH_PW']) . "\n");
     fwrite($logfile, "username from database: " . $user->userName . "\n");
