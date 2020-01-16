@@ -15,10 +15,6 @@ require "error.php";
 
 $authorizedUsers = array("display");
 
-$logfile = fopen("../feedbackpost.log", "w") or die("Unable to open logfile!");
-fwrite($logfile, $_SERVER['REQUEST_METHOD']);
-fclose($logfile);
-
 $database = new Database();
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $conn = $database->getEditConnection();
@@ -76,16 +72,17 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    $logfile = fopen("../feedbackpost.log", "a") or die("Unable to open logfile!");
-    fwrite($logfile, "password sent: " . $_SERVER['PHP_AUTH_PW'] . "\n");
-    fwrite($logfile, "return value from setuser: " . $user->setUser($_SERVER['PHP_AUTH_PW']) . "\n");
-    fwrite($logfile, "username from database: " . $user->userName . "\n");
-
-    fwrite($logfile, "is there any error message: " . $user->errMsg . "\n");
-    fclose($logfile);
+    
     if (isset($_SERVER['PHP_AUTH_PW'])) {
         
         $user = new User($conn);
+
+        if (!isset($user)) {
+            writeError("Cannot create user object");
+            header("500 Internal Server Error");
+            die();
+
+        }
 
         if (!$user->setUser($_SERVER['PHP_AUTH_PW'])) {
             
