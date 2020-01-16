@@ -80,9 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 header("HTTP/1.0 403 Authentication Failed");
                 die();
             } else {
-            writeError("Cannot retrieve user data: " . $user->errMsg);
+                writeError("Cannot retrieve user data: " . $user->errMsg);
             
-            header("HTTP/1.0 500 Internal Server Error");
+                header("HTTP/1.0 500 Internal Server Error");
+                die();
             }
         }
     } else {
