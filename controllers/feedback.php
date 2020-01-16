@@ -15,6 +15,10 @@ require "error.php";
 
 $authorizedUsers = array("display");
 
+$logfile = fopen("../feedbackpost.log", "w") or die("Unable to open logfile!");
+fwrite($logfile, $_SERVER['REQUEST_METHOD']);
+fclose($logfile);
+
 $database = new Database();
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $conn = $database->getEditConnection();
