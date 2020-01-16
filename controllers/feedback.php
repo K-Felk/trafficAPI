@@ -72,10 +72,19 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    $logfile = fopen("feedbackpost.log", "a") or die("Unable to open logfile!");
+    fwrite($logfile, "password sent: " . $_SERVER['PHP_AUTH_PW'] . "\n");
+    fwrite($logfile, "return value from setuser: " . $user->setUser($_SERVER['PHP_AUTH_PW']) . "\n");
+    fwrite($logfile, "username from database: " . $user->userName . "\n");
+
+    fwrite($logfile, "is there any error message: " . $user->errMsg . "\n");
+    fclose($logfile);
     if (isset($_SERVER['PHP_AUTH_PW'])) {
+        
         $user = new User($conn);
 
         if (!$user->setUser($_SERVER['PHP_AUTH_PW'])) {
+            
             if ($user->errMsg == "No user Found.") {
                 header("HTTP/1.0 403 Authentication Failed");
                 die();
