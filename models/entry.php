@@ -170,7 +170,7 @@ class Entry {
         
         $query = "SELECT
 	                s.id as spaceID,
-	                COUNT(t.space) as Number,
+	                COUNT(t.level) as Number,
 	                tl.name as level,
                     tl.id as levelID,
 	                s.name as spaceName
