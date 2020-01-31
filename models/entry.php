@@ -166,7 +166,8 @@ class Entry {
         //  Dates must be in the format "YYYY-DD-MM"
         //hours need to be an integer
         $includeDateQuery = $this->generateQuery($includeDates, $excludeDates, $includeHours, $excludeHours);
-
+        
+        
         $query = "SELECT
 	                s.id as spaceID,
 	                COUNT(t.space) as Number,
@@ -189,7 +190,9 @@ class Entry {
   	                ON
   		            e.entryID = t.entryId
                     WHERE 1=1 " . $includeDateQuery . " GROUP BY tl.id";
-
+        $handle =fopen("./sqllog.log", "w");
+        fwrite($handle, $query);
+        fclose($handle);
         $stmt = $this->conn->prepare($query);
 
         if ($stmt->execute()) {
