@@ -99,7 +99,7 @@ class Entry {
     private function generateQuery($includeDates, $excludeDates, $includeHours, $excludeHours) {
         $includeDateQuery = "";
 
-        if (!empty($excludeDates)) {
+        if (!empty($includeDates)) {
             $includeDateQuery .= " AND (";
             $it = 0;
             foreach ($includeDates as $range) {
@@ -191,7 +191,7 @@ class Entry {
   		            e.entryID = t.entryId
                     WHERE 1=1 " . $includeDateQuery . " GROUP BY tl.id";
         $handle =fopen("/var/www/prod/trafficapi/models/sqllog.log", "w");
-        fwrite($handle, $query);
+        fwrite($handle, $includeDateQuery);
         fclose($handle);
         $stmt = $this->conn->prepare($query);
 
