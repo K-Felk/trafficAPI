@@ -190,9 +190,7 @@ class Entry {
   	                ON
   		            e.entryID = t.entryId
                     WHERE 1=1 " . $includeDateQuery . " GROUP BY tl.id";
-        $handle =fopen("/var/www/prod/trafficapi/models/sqllog.log", "w");
-        fwrite($handle, $includeDateQuery);
-        fclose($handle);
+        
         $stmt = $this->conn->prepare($query);
 
         if ($stmt->execute()) {
